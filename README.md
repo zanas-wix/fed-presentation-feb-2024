@@ -1,7 +1,7 @@
 # @wix/fed-presentation-feb-2024
 
 - Introduction
-- Standalone AppScript project
+- Run Sheets -> Extensions -> AppScript
   - Run: In Editor + selecting a desired function & pressing the ▶️ button
   - Task: Send an email to myself
     - Generate a pirate quote about programming using ChatGPT API call
