@@ -3,12 +3,12 @@
 - Introduction
 - Run Sheets -> Extensions -> AppScript
   - Run: In Editor + selecting a desired function & pressing the ▶️ button
-  - Task: Send an email to myself
+  - [x] Task: Send an email to myself
     - Generate a pirate quote about programming using ChatGPT API call
     - Send the quote to myself via email
-  - Task: Send a calendar event for a whole month with horoscopes
-    - Generate a pirate quote about programming using ChatGPT API call
-    - Send the quote to myself via email
+  - [x] Task: Send a calendar event for a whole month with horoscopes
+    - Generate a an event for each monday of the current month
+    - Return the date & horoscope for Aries sign
 - AppScript project in Google Sheets via Test Deployment
   - Run: Button trigger in the Sheet app itself
   - Task: Have one field, a prompt that parses any cell coordinates (A1:B2) to provide it to ChatGPT
@@ -28,8 +28,6 @@
 
 Topics covered
 
-- [x] Standalone app
-- [x] Test Deployments
 - [x] Sheets API
 - [x] Drive API
 - [x] Gmail API

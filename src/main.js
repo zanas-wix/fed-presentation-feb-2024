@@ -1,3 +1,5 @@
+
+
 /**
  * Demo of Gmail API
  */
@@ -14,16 +16,50 @@ function demoNumberOne() {
   </body></html>`;
   const contentAsText = stripHTML(content);
 
-  GmailApp.sendEmail(recipient, subject, contentAsText, { htmlBody: content });
+  GmailApp.sendEmail(
+    recipient,
+    subject, 
+    contentAsText, 
+    { htmlBody: content }
+  );
 }
 
-function demoNumberTwo() {}
+function demoNumberTwo() {
+  /** @type {{horoscopes: { horoscope: string; date: string }[]}} */
+  const response = JSON.parse(ChatGPT(`
+    Generate some fake horoscopes for the sign Aries.
+    I'd like a new horoscope each remaining Monday of the month
+    based on the current date.
+
+    Today is: ${new Date().toString()}
+
+    Please return them in JSON & always in an array format:
+
+    {
+      horoscopes: Array<{
+        date: '', // ISO date string
+        horoscope: ''
+      }>
+    }
+  `, 'json_object')); 
+
+  // Ensure "Horoscopes" calendar exists
+  let [calendar] = CalendarApp.getCalendarsByName('Horoscopes')
+  if (calendar) calendar.deleteCalendar();
+  calendar = CalendarApp.createCalendar('Horoscopes');
+
+  for (const horoscope of response.horoscopes) {
+    const calendarEvent = calendar.createAllDayEvent('⭐ Horoscope', new Date(horoscope.date))
+    calendarEvent.setDescription(horoscope.horoscope);
+  }
+}
 
 /**
  * Calls the OpenAI API to get a completion for the provided prompt.
  * @param {string} prompt - The prompt for the completion.
+ * @param {'json_object' | 'text'} response_format
  */
-function ChatGPT(prompt) {
+function ChatGPT(prompt, response_format = 'text') {
   const httpResponse = UrlFetchApp.fetch(
     "https://api.openai.com/v1/chat/completions",
     {
@@ -34,6 +70,9 @@ function ChatGPT(prompt) {
       },
       payload: JSON.stringify({
         model: "gpt-3.5-turbo-1106",
+        response_format: {
+          type: response_format
+        },
         messages: [
           {
             role: "system",
@@ -44,12 +83,17 @@ function ChatGPT(prompt) {
             content: prompt,
           },
         ],
-        max_tokens: 150,
+        max_tokens: 500,
       }),
     }
   );
   /** @type {ChatCompletion} */
   const response = JSON.parse(httpResponse.getContentText());
+
+  if (response.choices[0].finish_reason === 'length') {
+    throw new Error('not enough tokens')
+  }
+
   const content = response.choices[0].message.content;
 
   Logger.log(`ChatGPT: ${content}`);
@@ -63,7 +107,7 @@ function ChatGPT(prompt) {
  * @returns {string}
  */
 function stripHTML(html) {
-  return XmlService.parse(htmlBody).getContent(0).getValue().trim();
+  return XmlService.parse(htmlBody).getContent(0).getValue().trim()
 }
 
 /**
