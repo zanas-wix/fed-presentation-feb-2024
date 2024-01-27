@@ -9,20 +9,12 @@ function demoNumberOne() {
 
   const recipient = "zanass@wix.com";
   const subject = "⭐ My daily haiku";
-  const htmlBody = `
+  const content = `<html><body>
     <pre>${haiku}</pre> ${SECRETS.IMAGE}
-  `;
+  </body></html>`;
+  const contentAsText = stripHTML(content);
 
-  Logger.log(
-    XmlService.parse(htmlBody)
-      .getAllContent()
-      .map((n) => n.asText().getText())
-      .join("")
-  );
-
-  GmailApp.sendEmail(recipient, subject, haiku, {
-    htmlBody,
-  });
+  GmailApp.sendEmail(recipient, subject, contentAsText, { htmlBody: content });
 }
 
 function demoNumberTwo() {}
@@ -63,6 +55,15 @@ function ChatGPT(prompt) {
   Logger.log(`ChatGPT: ${content}`);
 
   return content;
+}
+
+/**
+ * Strips all HTML tags, leaving only text content
+ * @param {string} html
+ * @returns {string}
+ */
+function stripHTML(html) {
+  return XmlService.parse(htmlBody).getContent(0).getValue().trim();
 }
 
 /**
