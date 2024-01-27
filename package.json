@@ -1,0 +1,12 @@
+{
+  "name": "good-sheet",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "push": "clasp push"
+  },
+  "devDependencies": {
+    "@types/google-apps-script": "^1.0.79"
+  }
+}
