@@ -10,16 +10,12 @@
   - Task: Stock Watchlist Genie (Drive API + Triggers)
 - End
 
-<br/>
- 
 ## 📗 Learn more
 
 Want to create a custom sidebar or a menu?
 
 Checkout of amazing project examples @ https://developers.google.com/apps-script/quickstart/automation
 
-<br/>
- 
 ---
 
 👋 Authored by Žanas Stundys @ Wix Blog
