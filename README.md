@@ -23,6 +23,7 @@
     - Create a function that exports the watchlist as a PNG & stores it in Google Drive & sends it via email
 - End
   - Mention scratching the surface of what's possible
+    - Topics not covered: Sidebar addons, Menu addons, etc.
 
 ---
 

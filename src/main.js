@@ -24,6 +24,9 @@ function demoNumberOne() {
   );
 }
 
+/**
+ * Demo of Calendar API
+ */
 function demoNumberTwo() {
   /** @type {{horoscopes: { horoscope: string; date: string }[]}} */
   const response = JSON.parse(ChatGPT(`
@@ -52,6 +55,48 @@ function demoNumberTwo() {
     const calendarEvent = calendar.createAllDayEvent('⭐ Horoscope', new Date(horoscope.date))
     calendarEvent.setDescription(horoscope.horoscope);
   }
+}
+
+/**
+ * Demo of button invocation & user input
+ * 
+ */
+function demoNumberThree() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet();
+  const a1 = {
+    prompt: 'B1',
+    watchlist: `A4:H${sheet.getLastRow()}`,
+    output: 'B2'
+  }
+  const prompt = sheet.getRange(a1.prompt).getValue();
+
+  const watchlistRange = sheet.getRange(a1.watchlist).getValues()
+
+  const genieResponse = ChatGPT(`
+    You are an expert stock analyst. You will get prompts where the user will post his prompt & his watchlist data.
+
+    Provide the most helpful answer & formatted nicely in short paragraphs.
+
+    The users prompt:
+    """
+    ${prompt}
+    """
+
+    Watchlist data:
+    """
+    ${JSON.stringify(watchlistRange)}
+    """
+    
+  `);
+
+  sheet.getRange(a1.output).setValue(genieResponse);
+}
+
+/**
+ * Demo of Drive API + triggers
+ */
+function demoNumberFour() {
+
 }
 
 /**
