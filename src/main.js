@@ -1,5 +1,3 @@
-
-
 /**
  * Demo of Gmail API
  */
@@ -16,12 +14,7 @@ function demoNumberOne() {
   </body></html>`;
   const contentAsText = stripHTML(content);
 
-  GmailApp.sendEmail(
-    recipient,
-    subject, 
-    contentAsText, 
-    { htmlBody: content }
-  );
+  GmailApp.sendEmail(recipient, subject, contentAsText, { htmlBody: content });
 }
 
 /**
@@ -29,7 +22,9 @@ function demoNumberOne() {
  */
 function demoNumberTwo() {
   /** @type {{horoscopes: { horoscope: string; date: string }[]}} */
-  const response = JSON.parse(ChatGPT(`
+  const response = JSON.parse(
+    ChatGPT(
+      `
     Generate some fake horoscopes for the sign Aries.
     I'd like a new horoscope each remaining Monday of the month
     based on the current date.
@@ -44,33 +39,39 @@ function demoNumberTwo() {
         horoscope: ''
       }>
     }
-  `, 'json_object')); 
+  `,
+      "json_object"
+    )
+  );
 
   // Ensure "Horoscopes" calendar exists
-  let [calendar] = CalendarApp.getCalendarsByName('Horoscopes')
+  let [calendar] = CalendarApp.getCalendarsByName("Horoscopes");
   if (calendar) calendar.deleteCalendar();
-  calendar = CalendarApp.createCalendar('Horoscopes');
+  calendar = CalendarApp.createCalendar("Horoscopes");
 
   for (const horoscope of response.horoscopes) {
-    const calendarEvent = calendar.createAllDayEvent('⭐ Horoscope', new Date(horoscope.date))
+    const calendarEvent = calendar.createAllDayEvent(
+      "⭐ Horoscope",
+      new Date(horoscope.date)
+    );
     calendarEvent.setDescription(horoscope.horoscope);
   }
 }
 
 /**
  * Demo of button invocation & user input
- * 
+ *
  */
 function demoNumberThree() {
   const sheet = SpreadsheetApp.getActiveSpreadsheet();
   const a1 = {
-    prompt: 'B1',
+    prompt: "B1",
     watchlist: `A4:H${sheet.getLastRow()}`,
-    output: 'B2'
-  }
+    output: "B2",
+  };
   const prompt = sheet.getRange(a1.prompt).getValue();
 
-  const watchlistRange = sheet.getRange(a1.watchlist).getValues()
+  const watchlistRange = sheet.getRange(a1.watchlist).getValues();
 
   const genieResponse = ChatGPT(`
     You are an expert stock analyst. You will get prompts where the user will post his prompt & his watchlist data.
@@ -96,7 +97,65 @@ function demoNumberThree() {
  * Demo of Drive API + triggers
  */
 function demoNumberFour() {
+  const spreadofsheet = SpreadsheetApp.getActiveSpreadsheet();
+  const stocksBufferSheetId = copyStocksToBufferSheet();
+  const url =
+    "https://docs.google.com/spreadsheets/d/" +
+    spreadofsheet.getId() +
+    "/export?exportFormat=pdf&format=pdf" + // export as pdf / csv / xls / xlsx
+    "&size=A4" + // paper size legal / letter / A4
+    "&portrait=true" + // orientation, false for landscape
+    "&fitw=true" + // fit to page width, false for actual size
+    "&sheetnames=false&printtitle=false" + // hide optional headers and footers
+    "&pagenumbers=false&gridlines=false" + // hide page numbers and gridlines
+    "&fzr=false" + // do not repeat row headers (frozen rows) on each page
+    "&gid=" +
+    stocksBufferSheetId; // the sheet's Id
 
+  // request export url
+  const blob = UrlFetchApp.fetch(url, {
+    headers: {
+      Authorization: `Bearer ${ScriptApp.getOAuthToken()}`,
+    },
+  }).getBlob();
+
+  // Save the PDF to the specified folder
+  const FOLDER_ID = "1mgidTe9NW1S1enAZMrajjNHDI9DqLJpC"; // ID of the folder to save the PDF
+  const folder = DriveApp.getFolderById(FOLDER_ID);
+  const pdfName = "watchlist.jpg";
+  const files = folder.getFilesByName(pdfName);
+  while (files.hasNext()) files.next().setTrashed(true);
+
+  const pdfFile = folder.createFile(blob).setName(pdfName);
+
+  // Send the PDF via email
+  const recipient = "zanass@wix.com";
+  const subject = "⭐ Stocks watchlist";
+  const body = "";
+
+  GmailApp.sendEmail(recipient, subject, body, {
+    attachments: [pdfFile.getAs(MimeType.PDF)],
+  });
+}
+
+function copyStocksToBufferSheet() {
+  const sheet = SpreadsheetApp.getActive();
+  const data = sheet.getSheetByName("Stocks").getDataRange().getDisplayValues();
+
+  if (data.length > 0) {
+    let bufferSheet = sheet.getSheetByName("Copy of Stocks");
+
+    if (bufferSheet) sheet.deleteSheet(bufferSheet);
+
+    bufferSheet = sheet.getSheetByName("Stocks").copyTo(sheet);
+
+    bufferSheet.clear({ contentsOnly: true });
+    bufferSheet.getRange(1, 1, data.length, data[0].length).setValues(data);
+
+    SpreadsheetApp.flush();
+
+    return bufferSheet.getSheetId();
+  }
 }
 
 /**
@@ -104,7 +163,7 @@ function demoNumberFour() {
  * @param {string} prompt - The prompt for the completion.
  * @param {'json_object' | 'text'} response_format
  */
-function ChatGPT(prompt, response_format = 'text') {
+function ChatGPT(prompt, response_format = "text") {
   const httpResponse = UrlFetchApp.fetch(
     "https://api.openai.com/v1/chat/completions",
     {
@@ -116,7 +175,7 @@ function ChatGPT(prompt, response_format = 'text') {
       payload: JSON.stringify({
         model: "gpt-3.5-turbo-1106",
         response_format: {
-          type: response_format
+          type: response_format,
         },
         messages: [
           {
@@ -135,8 +194,8 @@ function ChatGPT(prompt, response_format = 'text') {
   /** @type {ChatCompletion} */
   const response = JSON.parse(httpResponse.getContentText());
 
-  if (response.choices[0].finish_reason === 'length') {
-    throw new Error('not enough tokens')
+  if (response.choices[0].finish_reason === "length") {
+    throw new Error("not enough tokens");
   }
 
   const content = response.choices[0].message.content;
@@ -152,7 +211,7 @@ function ChatGPT(prompt, response_format = 'text') {
  * @returns {string}
  */
 function stripHTML(html) {
-  return XmlService.parse(htmlBody).getContent(0).getValue().trim()
+  return XmlService.parse(htmlBody).getContent(0).getValue().trim();
 }
 
 /**
