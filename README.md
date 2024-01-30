@@ -1,6 +1,4 @@
 <img  height="110" src="https://upload.wikimedia.org/wikipedia/commons/a/ae/Google_Sheets_2020_Logo.svg" />
-&nbsp;
-&nbsp;
 <img height="110" src="https://seeklogo.com/images/G/google-apps-script-logo-BDEAA5E2DF-seeklogo.com.png" />
 
 # ToC: Sheets + AppScript
