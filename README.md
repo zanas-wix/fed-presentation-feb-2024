@@ -1,31 +1,20 @@
 # Sheets + AppScript
 
-👋 Authored by: Žanas Stundys • Blog
+### 📕 ToC
 
 - Introduction
 - Run [Sheets](https://sheets.google.com/)
-  - Task: Send an email with a haiku about programming.
-  - Task: Send a calendar event for each Monday of the current month with horoscopes for Aries sign.
-  - Task: Create a stock watchlist with ticker, sparkline, price, and change.
-  - Task: Create a prompt cell that parses cell coordinates and provides it to ChatGPT.
-  - Task: Output generated text in a specific cell range.
-  - Task: Send a daily email with a photo of the current watchlist.
+  - Task: Programming Haikus (ChatGPT API + Sheets API + Gmail API)
+  - Task: Weekly Horoscopes (Calendar API)
+  - Task: Stock Watchlist Genie (Drive API + Triggers)
 - End
 
-## 📗 Learn more
+### 📗 Learn more
 
-Tons of amazing project examples @ https://developers.google.com/apps-script/quickstart/automation
+Want to create a custom sidebar or a menu?
 
-## Topics covered:
+Checkout of amazing project examples @ https://developers.google.com/apps-script/quickstart/automation
 
-- Sheets API
-- Drive API
-- Gmail API
-- Calendar API
-- Triggers
+---
 
-## Topics not covered:
-
-- Sidebar addons,
-- Menu addons,
-- ... and friends
+👋 Authored by Žanas Stundys @ Wix Blog
