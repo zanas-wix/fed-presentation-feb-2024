@@ -1,6 +1,6 @@
 # Sheets + AppScript
 
-### 📕 ToC
+## 📕 ToC
 
 - Introduction
 - Run [Sheets](https://sheets.google.com/)
@@ -9,7 +9,7 @@
   - Task: Stock Watchlist Genie (Drive API + Triggers)
 - End
 
-### 📗 Learn more
+## 📗 Learn more
 
 Want to create a custom sidebar or a menu?
 
