@@ -1,3 +1,5 @@
+// main.gs
+
 /**
  * Demo of Gmail API
  */
@@ -162,6 +164,7 @@ function copyStocksToBufferSheet() {
  * Calls the OpenAI API to get a completion for the provided prompt.
  * @param {string} prompt - The prompt for the completion.
  * @param {'json_object' | 'text'} response_format
+ * @customfunction
  */
 function ChatGPT(prompt, response_format = "text") {
   const httpResponse = UrlFetchApp.fetch(
@@ -211,7 +214,7 @@ function ChatGPT(prompt, response_format = "text") {
  * @returns {string}
  */
 function stripHTML(html) {
-  return XmlService.parse(htmlBody).getContent(0).getValue().trim();
+  return XmlService.parse(html).getContent(0).getValue().trim();
 }
 
 /**
